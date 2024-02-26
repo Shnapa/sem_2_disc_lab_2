@@ -2,11 +2,10 @@ class LZW:
     def encode(self, text: str) -> tuple[str, list]:
         i = 0
         len_ = len(text)
-        code = ""
+        code = []
 
-        start_dict = sorted(set(text))
+        start_dict = list(set(text))
         dict_ = start_dict[:]
-        print(dict_)
 
         new_entry = ""
         while i < len_:
@@ -14,20 +13,19 @@ class LZW:
             i += 1
             if new_entry not in dict_:
                 dict_.append(new_entry)
-                code += str(dict_.index(new_entry[:-1]))
+                code.append(dict_.index(new_entry[:-1]))
                 new_entry = ""
                 i -= 1
 
         if new_entry not in dict_:
             dict_.append(new_entry)
-        code += str(dict_.index(new_entry))
+        code.append(dict_.index(new_entry))
 
         return code, start_dict
 
     def decode(self, code: str, coding_dict: list) -> str:
         decoded_text = ""
         i = 0
-        print(code, coding_dict)
 
         for symb in code:
             symb = int(symb)
@@ -41,6 +39,7 @@ class LZW:
                     if new_entry in coding_dict:
                         for new_char in new_entry:
                             new_entry += new_char
+                            i += 1
                             if new_entry not in coding_dict:
                                 break
 
@@ -50,6 +49,3 @@ class LZW:
 
         return decoded_text
 
-
-code, dict_ = LZW().encode("ababababa")
-print(LZW().decode(code, dict_))
